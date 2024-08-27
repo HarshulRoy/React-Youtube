@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/https//:harshulroy.github.io/React-Youtube/static/css/main.08aaff39.css",
+    "main.js": "/https//:harshulroy.github.io/React-Youtube/static/js/main.98289a56.js",
+    "static/js/453.6e83c69b.chunk.js": "/https//:harshulroy.github.io/React-Youtube/static/js/453.6e83c69b.chunk.js",
+    "index.html": "/https//:harshulroy.github.io/React-Youtube/index.html",
+    "main.08aaff39.css.map": "/https//:harshulroy.github.io/React-Youtube/static/css/main.08aaff39.css.map",
+    "main.98289a56.js.map": "/https//:harshulroy.github.io/React-Youtube/static/js/main.98289a56.js.map",
+    "453.6e83c69b.chunk.js.map": "/https//:harshulroy.github.io/React-Youtube/static/js/453.6e83c69b.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.08aaff39.css",
+    "static/js/main.98289a56.js"
+  ]
+}
