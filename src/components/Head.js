@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../utils/appSlice";
 import { YOUTUBE_SEARCH_API } from "../utils/constant";
@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 
 
 const Head = () => {
-  const [searchQuery, setSerachQuery] = React.useState("");
+  const [searchQuery, setSearchQuery] = React.useState("");
   const [suggestions,setSuggestions] = React.useState([]);
   const [showSuggestions,setShowSuggestions] = React.useState(false)
 
@@ -33,7 +33,6 @@ const Head = () => {
     try {
       let data = await fetch(YOUTUBE_SEARCH_API + str);
     data = await data.json();
-    // console.log(data)
     setSuggestions(data[1]);
     // update cache 
     dispatch(cacheResults({
@@ -48,6 +47,13 @@ const Head = () => {
   const toggleMenuHandler = () => {
     dispatch(toggleMenu());
   };
+  
+
+  function HideList(){
+    setTimeout(()=>{
+      setShowSuggestions(false)
+    },300)
+  }
 
   return (
     <div className="grid grid-flow-col p-2 h-14 items-center">
@@ -103,9 +109,9 @@ const Head = () => {
       <div className="flex relative col-span-10 items-center justify-center">
         <input
           value={searchQuery}
-          onBlur={()=>setShowSuggestions(false)}
+          onBlur={HideList}
           onFocus={()=>setShowSuggestions(true)}
-          onChange={(e) => setSerachQuery(e.target.value)}
+          onChange={(e) => setSearchQuery(e.target.value)}
           className="w-1/2 px-2 h-9 border rounded-l-full shadow-inner border-slate-400 focus:border-[#1c62b9] focus:outline-none"
           type="text"
         />
@@ -117,7 +123,7 @@ const Head = () => {
             <ul className="my-2">
               {suggestions.map((item, index) => (
                 <Link to={`/results?search_query=${item}`}  key={index}>
-                  <li className="py-1 flex items-center gap-4 pl-5 hover:bg-slate-200">
+                  <li onClick={()=>setSearchQuery(item)} className="py-1 flex items-center gap-4 pl-5 hover:bg-slate-200">
                   <Icon />
                   {item}
                 </li>

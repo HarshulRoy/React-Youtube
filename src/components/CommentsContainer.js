@@ -1,6 +1,6 @@
 import React from "react";
 
-const CommentsContainer = ({commentData}) => {
+const CommentsContainer = ({commentData,commentCount}) => {
   
   const Comment = ({ data }) => {
     // const { name, text, replies } = data;
@@ -25,7 +25,7 @@ const CommentsContainer = ({commentData}) => {
   };
   return (         
     <div className="my-5 p-3 w-2/3">
-      <h1 className="text-2xl font-bold">Comments:</h1>
+      <h1 className="text-[21px] font-medium">{parseInt(commentCount).toLocaleString()} Comments</h1>
       {commentData&&commentData.map((item,index)=>{
         return <Comment key={index} data={item} />
       })}

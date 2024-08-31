@@ -2,28 +2,34 @@ import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { storeVideo } from '../utils/suggestionSlice'
 import { useSearchParams } from 'react-router-dom'
+import SuggestionCard from './SuggestionCard'
+import ButtonList from './ButtonList'
+import { YOUTUBE_SUGGESTION_API } from '../utils/constant'
+
 
 const Results = () => {
   const dispatch = useDispatch()
   const [searchParams] = useSearchParams();
-  console.log(searchParams.get('search_query'))
   const searchSuggestions = useSelector((store)=>store.suggestion)
-  function showw(){
-    console.log(searchSuggestions.result)
-  }
+  
   useEffect(()=>{
     videoSearch()
-  },[])
+  },[searchParams.get('search_query')])
+  
   async function videoSearch(){
-    let data = await fetch("https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=20&type=video&key=AIzaSyCQqxr3I97aw4EBPTsAeloDXqgSC6fRIUA&q="+searchParams.get('search_query'))
+    let data = await fetch(YOUTUBE_SUGGESTION_API+searchParams.get('search_query'))
     data = await data.json()
     console.log(data.items)
     dispatch(storeVideo(data.items))
   }
   return (
-    <div>
-      This is results
-      <button className='w-10 h-7 bg-slate-600' onClick={showw}>show</button>
+    <div className='flex flex-col  col-span-10'>
+      <ButtonList/>
+      <div className='flex flex-col items-center'>
+      {searchSuggestions.result.length>0&&searchSuggestions.result.map((item, index)=>{
+        return <SuggestionCard key={index} info={item}/>
+      })}
+      </div>
     </div>
   )
 }
