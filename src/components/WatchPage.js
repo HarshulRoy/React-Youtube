@@ -1,14 +1,19 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { closeMenu, openMenu } from "../utils/appSlice";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import CommentsContainer from "./CommentsContainer";
+import VideoCard from "./VideoCard";
+import SuggestionCard from "./SuggestionCard";
 import {
   YOUTUBE_CHANNEL_PROFILE_PICTURE_API,
   YOUTUBE_COMMENT_API,
   YOUTUBE_SINGLE_VIDEO_API,
   YOUTUBE_SUBSCRIPTION_COUNT_API,
+  YOUTUBE_VIDEOS_API,
 } from "../utils/constant";
+
+
 
 const WatchPage = () => {
   const [searchParams] = useSearchParams();
@@ -20,7 +25,12 @@ const WatchPage = () => {
     "https://cdn-icons-png.flaticon.com/128/3033/3033143.png"
   );
   
+    
+
+
   const dispatch = useDispatch();
+  const [videos,setVideos] = React.useState([])
+
   React.useEffect(() => {
     fetchComments();
     dispatch(closeMenu());
@@ -28,7 +38,19 @@ const WatchPage = () => {
     document.documentElement.scrollTop = 0;
     return () => dispatch(openMenu());
   }, []);
-
+  // fetching suggested video
+  const getVideos = async()=>{
+    try {
+      let data = await fetch(YOUTUBE_VIDEOS_API+"15")
+      data = await data.json() 
+      setVideos(data.items)
+    } catch (error) {
+      console.log('video container error',error)
+    }
+  }
+  React.useEffect(()=>{
+    getVideos()
+  },[])
   // Likes on Video
   let likes = profileData?.statistics?.likeCount
   if(likes!=null && likes>1000 && likes<1000000){
@@ -69,7 +91,27 @@ const WatchPage = () => {
     setComments(data.items);
   }
 
+  function handleHistory(item){
+    let list = sessionStorage.getItem('id') || {}
+    if(!sessionStorage.getItem('id')){
+      list[item.id]= item
+      list = JSON.stringify(list)
+      sessionStorage.setItem('id',list)
+      console.log('run 1')
+    }else{
+      list = JSON.parse(list)
+      if(!list[item.id]){
+        list[item.id] = item
+        list = JSON.stringify(list)
+        sessionStorage.setItem('id',list)
+        console.log('run 2')
+      }
+    }
+    console.log(JSON.parse(sessionStorage.getItem('id')),'2list')
+  }
+
   return (
+    <>
     <div className="py-4 px-10 col-span-8 rounded-lg flex flex-col">
       <div>
         <iframe
@@ -159,7 +201,7 @@ const WatchPage = () => {
         )}
         {profileData != null && (
           <div className="bg-[rgb(247,247,247)] text-sm  rounded-xl px-3">
-            <div className={fold?"h-28 overflow-hidden w-[100%] p-2 relative":"w-[100%] p-2 relative"}>
+            <div className={fold?"h-28 overflow-hidden w-[100%] p-2 relative":"w-[100%] p-2 relative"} style={fold?{display:"-webkit-box",webkitLineClamp: "5",webkitBoxOrient: "vertical"}:{display:'block'}}>
               <h2 className="font-medium tracking-wide">{parseInt(profileData?.statistics?.viewCount).toLocaleString()} views</h2>
               <div>
                 {profileData.snippet.description.map((item, index) => {
@@ -172,8 +214,15 @@ const WatchPage = () => {
         )}
         <CommentsContainer commentData={comments} commentCount={profileData?.statistics?.commentCount} />
       </div>
-      <div></div>
+    </div> 
+    <div className="col-span-4">
+    {videos.length===0?<div></div>: 
+    <div className='flex flex-wrap m-6'>
+      {videos.map((item)=> <Link onClick={()=>handleHistory(item)} to={"/watch?v="+item.id} key={item.id} className='w-[22rem]'><SuggestionCard dimension={{height:"93px",mTop:"0rem"}} info={item}/></Link>)}
+    </div>}
     </div>
+    </>
+    
   );
 };
 

@@ -27,7 +27,7 @@ const Results = () => {
       <ButtonList/>
       <div className='flex flex-col items-center'>
       {searchSuggestions.result.length>0&&searchSuggestions.result.map((item, index)=>{
-        return <SuggestionCard key={index} info={item}/>
+        return <SuggestionCard key={index} info={item} dimension={{height:"270px",mTop:"1rem"}}/>
       })}
       </div>
     </div>

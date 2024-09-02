@@ -12,7 +12,7 @@ const Sidebar = () => {
     <div className="col-span-2"> 
       <div className='p-5'>
         <ul>
-          <li><Link to='/'>Home</Link></li>
+          <li className='font-semibold'><Link to='/'>Home</Link></li>
           <li>Shorts</li>
           <li>Subscribe</li>
         </ul>
@@ -22,7 +22,7 @@ const Sidebar = () => {
       <h1 className='font-bold pt-5'>You &gt;</h1>
         <ul>
           <li>Your channel</li>
-          <li>History</li>
+          <li className='font-semibold'><Link to='/history'>History</Link></li>
           <li>Playlists</li>
           <li>Your videos</li>
           <li>Watch later</li>
